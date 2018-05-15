@@ -6,7 +6,7 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/13 15:05:22 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/15 05:49:37 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/15 09:47:43 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ int		set_env(char *line, char ***env)
 		free((*env)[i]);
 		++i;
 	}
-	newenv[i] = ft_strjoin(args[0], args[1]);
+	newenv[i] = msh_strjoin_char(args[0], args[1], '=');
 	newenv[i + 1] = 0;
 	free(*env);
 	*env = newenv;

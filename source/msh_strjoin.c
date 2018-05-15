@@ -1,29 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   msh_strjoin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/05/13 15:06:10 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/15 09:38:13 by obamzuro         ###   ########.fr       */
+/*   Created: 2018/05/15 09:35:23 by obamzuro          #+#    #+#             */
+/*   Updated: 2018/05/15 09:39:18 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef __MINISHELL_H
-# define __MINISHELL_H
-# define AM_COMMANDS 5
-# include <unistd.h>
-# include <sys/stat.h>
-# include <sys/types.h>
-# include "libft.h"
-# include "ft_printf.h"
+#include "minishell.h"
 
-typedef struct	s_comm_corr
+char	*msh_strjoin_char(const char *s1, const char *s2, char c)
 {
-	char	*comm;
-	int		(*func)(char *, char ***);
-}				t_comm_corr;
+	char	*a;
+	size_t	i;
+	size_t	s1l;
 
-char			*msh_strjoin_char(const char *s1, const char *s2, char c);
-#endif
+	if (!s1 || !s2)
+		return (NULL);
+	s1l = ft_strlen(s1);
+	i = s1l + ft_strlen(s2) + 2;
+	a = ft_strnew(i);
+	if (!a)
+		return (NULL);
+	ft_strcpy(a, s1);
+	a[s1l] = c;
+	ft_strcpy(a + s1l + 1, s2);
+	return (a);
+}

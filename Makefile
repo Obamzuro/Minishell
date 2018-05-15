@@ -6,13 +6,14 @@
 #    By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/11 15:56:03 by obamzuro          #+#    #+#              #
-#    Updated: 2018/05/14 13:54:01 by obamzuro         ###   ########.fr        #
+#    Updated: 2018/05/15 09:39:04 by obamzuro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-SRCNAME = main.c
+SRCNAME = main.c		\
+		  msh_strjoin.c	
 
 FLAGS = -Wall -Wextra -Werror
 
