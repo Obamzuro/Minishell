@@ -6,7 +6,7 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/13 15:05:22 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/16 11:59:10 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/16 14:01:13 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,17 +210,46 @@ int		print_env(char **args, char ***env)
 	return (0);
 }
 
+char	*ft_exec_path(char **args, char ***env)
+{
+	char	**paths;
+	int		i;
+	char	*temp;
+
+	paths = ft_strsplit(get_env("PATH", *env), ':');
+	i = 0;
+	while (paths[i])
+	{
+		temp = msh_strjoin_char(paths[i], args[0], '/');
+		if (!access(temp, X_OK))
+			return (temp);
+		free(temp);
+		++i;
+	}
+	return (0);
+}
+
+void	int_handler(int sig)
+{
+	signal(sig, SIG_IGN);
+	kill(g_child, SIGINT);
+	ft_printf("HERE\n");
+}
+
 int		ft_exec(char **args, char ***env)
 {
 	pid_t		process;
-//	char		**argv;
+	char		*comm;
 
-//	argv = ft_strsplit(line, ' ');
-	if (
+	if (!ft_strchr(args[0], '/'))
+		comm = ft_exec_path(args, env);
+	else
+		comm = args[0];
 	process = fork();
 	if (process == 0)
 	{
-		execve(args[0], args, *env);
+		if (execve(comm, args, *env) == -1)
+			ft_printf("Not a right comm\n");
 	}
 	else if (process > 0)
 	{
@@ -228,7 +257,7 @@ int		ft_exec(char **args, char ***env)
 	}
 	else
 	{
-		ft_printf("Not a right comm\n");
+		ft_printf("Can't create a child thread\n");
 		return (1);
 	}
 	return (0);
@@ -272,14 +301,22 @@ int		main(void)
 	char	*line;
 	int		i;
 	char	**env;
+	int		a;
 	t_comm_corr commands[AM_COMMANDS];
+	extern char		**environ;
 
+	signal(SIGINT, int_handler);
+	signal(SIGSTOP, int_handler);
 	fill_commands(commands);
 	env = fill_env();
 	while (1)
 	{
 		ft_printf("$> ");
-		get_next_line(0, &line);
+		if ((a = get_next_line(0, &line)) == -1)
+		{
+			ft_printf("123\n");
+			continue;
+		}
 		args = ft_strsplit(line, ' ');
 		i = -1;
 		while (++i < AM_COMMANDS)

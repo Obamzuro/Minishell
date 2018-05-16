@@ -6,7 +6,7 @@
 #    By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/11 15:56:03 by obamzuro          #+#    #+#              #
-#    Updated: 2018/05/15 09:39:04 by obamzuro         ###   ########.fr        #
+#    Updated: 2018/05/16 13:31:06 by obamzuro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,10 +28,10 @@ HDR = include/minishell.h
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	gcc -g $(FLAGS) -I $(HDRDIR) $(OBJ) -L libft -lft -L ftprintf -lftprintf -o $(NAME)
+	gcc -g -I $(HDRDIR) $(OBJ) -L libft -lft -L ftprintf -lftprintf -o $(NAME)
 
 %.o: %.c $(HDR)
-	gcc -g $(FLAGS) -I $(HDRDIR) -c $< -o $@
+	gcc -g -I $(HDRDIR) -c $< -o $@
 
 clean:
 	find . -name "*.o" -exec rm -rf {} \;
