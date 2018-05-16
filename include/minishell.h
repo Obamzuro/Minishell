@@ -6,7 +6,7 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/13 15:06:10 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/15 09:38:13 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/16 11:41:47 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 typedef struct	s_comm_corr
 {
 	char	*comm;
-	int		(*func)(char *, char ***);
+	int		(*func)(char **, char ***);
 }				t_comm_corr;
 
 char			*msh_strjoin_char(const char *s1, const char *s2, char c);

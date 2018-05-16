@@ -6,14 +6,21 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/13 15:05:22 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/15 09:47:43 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/16 11:59:10 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int		print_pwd(char *line, char ***env)
+int		print_pwd(char **args, char ***env)
 {
+	char	*line;
+
+	if (args[1])
+	{
+		ft_printf("pwd: too many arguments");
+		return (1);
+	}
 	line = getcwd(0, 0);
 	env = 0;
 	ft_printf("%s\n", line);
@@ -21,103 +28,41 @@ int		print_pwd(char *line, char ***env)
 	return (0);
 }
 
-int		change_dir(char *line, char ***env)
-{
-	struct stat		mystat;
-	size_t			amargs;
-	char			**args;
-	char			*pwd;
-	char			*path;
-	int				yep;
-
-	env = 0;
-	amargs = ft_wcount(line, ' ');
-	args = ft_strsplit(line, ' ');
-	if (amargs > 2)
-		ft_printf("cd: too many arguments\n");
-	else if (amargs == 1)
-	{
-		if (lstat(args[0], &mystat) == -1)
-			ft_printf("cd: no such file or directory: %s\n", args[0]);
-		else if (!S_ISDIR(mystat.st_mode))
-			ft_printf("cd: not a directory: %s\n", args[0]);
-		else
-			chdir(args[0]);
-	}
-	else if (amargs == 2)
-	{
-		pwd = getcwd(0, 0);
-		if ((line = ft_strstr(pwd, args[0])))
-		{
-			yep = ft_strlen(pwd) + ft_strlen(args[1]) - ft_strlen(args[0]) + 1;
-			path = (char *)malloc(yep);
-			ft_strncat(path, pwd, line - pwd);
-			ft_strcat(path, args[1]);
-			ft_strcat(path, line + ft_strlen(args[0]));
-			if (lstat(path, &mystat) == -1)
-				ft_printf("cd: no such file or directory: %s\n", path);
-			else if (!S_ISDIR(mystat.st_mode))
-				ft_printf("cd: not a directory: %s\n", path);
-			else
-			{
-				ft_printf("%s\n", path);
-				chdir(path);
-			}
-		}
-		else
-			ft_printf("cd: string not in pwd: %s\n", args[0]);
-		free(pwd);
-	}
-	return (0);
-}
-
-int		print_env(char *line, char ***env)
+char	*get_env(char *key, char **env)
 {
 	int		i;
 
 	i = 0;
-	while ((*env)[i])
-		ft_printf("%s\n", (*env)[i++]);
-	line = 0;
-	return (0);
-}
-
-int		ft_exec(char *line, char ***env)
-{
-	pid_t		process;
-	char		**argv;
-
-	argv = ft_strsplit(line, ' ');
-	process = fork();
-	if (process == 0)
+	while (env[i])
 	{
-		execve(line, argv, *env);
-	}
-	else if (process > 0)
-	{
-		wait(0);
-	}
-	else
-	{
-		ft_printf("Not a right comm\n");
-		return (1);
+		if (ft_strcmp(env[i], key) == '=')
+			return (env[i] + ft_strlen(key) + 1);
+		++i;
 	}
 	return (0);
 }
 
-int		set_env(char *line, char ***env)
+int		set_env_inner(char *key, char *value, char ***env)
 {
-	int		amargs;
-	char	**args;
+	int i;
 	char	**newenv;
-	int		i;
 
-	amargs = ft_wcount(line, ' ');
-	args = ft_strsplit(line, ' ');
+	i = 0;
+	while ((*env)[i])
+	{
+		if (ft_strcmp((*env)[i], key) == '=')
+		{
+			free((*env)[i]);
+			(*env)[i] = (char *)malloc(ft_strlen(key) + ft_strlen(value) + 2);
+			(*env)[i] = msh_strjoin_char(key, value, '=');
+			return (0);
+		}
+		++i;
+	}
 	i = 0;
 	while ((*env)[i])
 		++i;
-	newenv = (char **)malloc(sizeof(char *) * (i + 3));
+	newenv = (char **)malloc(sizeof(char *) * (i + 2));
 	i = 0;
 	while((*env)[i])
 	{
@@ -125,32 +70,51 @@ int		set_env(char *line, char ***env)
 		free((*env)[i]);
 		++i;
 	}
-	newenv[i] = msh_strjoin_char(args[0], args[1], '=');
+	newenv[i] = msh_strjoin_char(key, value, '=');
 	newenv[i + 1] = 0;
 	free(*env);
 	*env = newenv;
 	return (0);
 }
 
-int		unset_env(char *line, char ***env)
+int		set_env(char **args, char ***env)
 {
-	int		amargs;
-	char	**args;
+	//amargs = ft_wcount(line, ' ');
+	//args = ft_strsplit(line, ' ');
+	if (args[1] == 0 || args[2] == 0)
+	{
+		ft_printf("setenv: not enough arguments");
+		return (1);
+	}
+	else if (args[3] != 0)
+	{
+		ft_printf("setenv: too many arguments");
+		return (1);
+	}
+	set_env_inner(args[1], args[2], env);
+	return (0);
+}
+
+int		unset_env(char **args, char ***env)
+{
+//	char	**args;
 	char	**newenv;
 	int		i;
 	int		flag;
 
-	amargs = ft_wcount(line, ' ');
-	args = ft_strsplit(line, ' ');
+//	amargs = ft_wcount(line, ' ');
+//	args = ft_strsplit(line, ' ');
+	if (!get_env(args[1], *env))
+		return (1);
 	i = 0;
 	while ((*env)[i])
 		++i;
-	newenv = (char **)malloc(sizeof(char *) * (i + 1));
+	newenv = (char **)malloc(sizeof(char *) * (i));
 	i = 0;
 	flag = 0;
 	while((*env)[i])
 	{
-		if (!flag && strcmp((*env)[i], args[0])  == '=')
+		if (!flag && strcmp((*env)[i], args[1])  == '=')
 		{
 			++i;
 			flag = 1;
@@ -163,6 +127,110 @@ int		unset_env(char *line, char ***env)
 	newenv[i - flag] = 0;
 	free(*env);
 	*env = newenv;
+	return (0);
+}
+
+
+int		change_dir_back(char ***env)
+{
+	char	*value;
+
+	value = get_env("OLDPWD", *env);
+	if (!value)
+		return (1);
+	//FIXME
+	//chdir == 0
+	chdir(value);
+	return (0);
+}
+
+int		change_dir(char **args, char ***env)
+{
+	struct stat		mystat;
+//	size_t			amargs;
+//	char			**args;
+	char			*pwd;
+	char			*path;
+	int				yep;
+	char			*line;
+
+//	amargs = ft_wcount(line, ' ');
+//	args = ft_strsplit(line, ' ');
+	pwd = getcwd(0, 0);
+	if (args[1] && args[2] && args[3])
+		ft_printf("cd: too many arguments\n");
+	else if (!args[1])
+		chdir(get_env("HOME", *env));
+	else if (!args[2])
+	{
+		if (args[1][0] == '-' && !args[1][1])
+			change_dir_back(env);
+		else if (lstat(args[1], &mystat) == -1)
+			ft_printf("cd: no such file or directory: %s\n", args[1]);
+		else if (!S_ISDIR(mystat.st_mode))
+			ft_printf("cd: not a directory: %s\n", args[1]);
+		else
+			chdir(args[1]);
+	}
+	else if (!args[3])
+	{
+		if ((line = ft_strstr(pwd, args[1])))
+		{
+			yep = ft_strlen(pwd) + ft_strlen(args[2]) - ft_strlen(args[1]) + 1;
+			path = (char *)malloc(yep);
+			ft_strncat(path, pwd, line - pwd);
+			ft_strcat(path, args[2]);
+			ft_strcat(path, line + ft_strlen(args[1]));
+			if (lstat(path, &mystat) == -1)
+				ft_printf("cd: no such file or directory: %s\n", path);
+			else if (!S_ISDIR(mystat.st_mode))
+				ft_printf("cd: not a directory: %s\n", path);
+			else
+			{
+				ft_printf("%s\n", path);
+				chdir(path);
+			}
+		}
+		else
+			ft_printf("cd: string not in pwd: %s\n", args[1]);
+	}
+	set_env_inner("OLDPWD", pwd, env);
+	free(pwd);
+	return (0);
+}
+
+int		print_env(char **args, char ***env)
+{
+	int		i;
+
+	i = 0;
+	while ((*env)[i])
+		ft_printf("%s\n", (*env)[i++]);
+	i = args + 1 - args;
+	return (0);
+}
+
+int		ft_exec(char **args, char ***env)
+{
+	pid_t		process;
+//	char		**argv;
+
+//	argv = ft_strsplit(line, ' ');
+	if (
+	process = fork();
+	if (process == 0)
+	{
+		execve(args[0], args, *env);
+	}
+	else if (process > 0)
+	{
+		wait(0);
+	}
+	else
+	{
+		ft_printf("Not a right comm\n");
+		return (1);
+	}
 	return (0);
 }
 
@@ -200,10 +268,9 @@ char	**fill_env(void)
 
 int		main(void)
 {
-	extern char		**environ;
+	char	**args;
 	char	*line;
 	int		i;
-	char	*temp;
 	char	**env;
 	t_comm_corr commands[AM_COMMANDS];
 
@@ -213,20 +280,21 @@ int		main(void)
 	{
 		ft_printf("$> ");
 		get_next_line(0, &line);
+		args = ft_strsplit(line, ' ');
 		i = -1;
 		while (++i < AM_COMMANDS)
 		{
-			if (!(temp = ft_strchr(line, ' ')))
-				temp = ft_strchr(line, 0);
-			if (!ft_strncmp(commands[i].comm, line, temp - line))
+//			if (!(temp = ft_strchr(line, ' ')))
+//				temp = ft_strchr(line, 0);
+			if (!ft_strncmp(commands[i].comm, args[0], ft_strlen(commands[i].comm)))
 			{
-				commands[i].func(temp + 1, &env);
+				commands[i].func(args, &env);
 				break;
 			}
 		}
 		if (i == AM_COMMANDS)
 		{
-			ft_exec(line, &env);
+			ft_exec(args, &env);
 		}
 	}
 	return (0);
