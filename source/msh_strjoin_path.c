@@ -1,33 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   msh_strjoin_path.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/05/13 15:06:10 by obamzuro          #+#    #+#             */
+/*   Created: 2018/05/17 10:11:50 by obamzuro          #+#    #+#             */
 /*   Updated: 2018/05/17 10:12:11 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef __MINISHELL_H
-# define __MINISHELL_H
-# define AM_COMMANDS 5
-# include <unistd.h>
-# include <signal.h>
-# include <sys/stat.h>
-# include <sys/types.h>
-# include "libft.h"
-# include "ft_printf.h"
+#include "minishell.h"
 
-typedef struct	s_comm_corr
+char	*msh_strjoin_path(const char *s1, const char *s2)
 {
-	char	*comm;
-	int		(*func)(char **, char ***);
-}				t_comm_corr;
+	char	*a;
+	size_t	i;
+	size_t	s1l;
+	char	needslash;
 
-pid_t			g_child;
-
-char			*msh_strjoin_char(const char *s1, const char *s2, char c);
-char			*msh_strjoin_path(const char *s1, const char *s2);
-#endif
+	if (!s1 || !s2)
+		return (NULL);
+	s1l = ft_strlen(s1);
+	needslash = 1;
+	if (s1[s1l - 1] == '/')
+		needslash = 0;
+	i = s1l + ft_strlen(s2) + 1 + needslash;
+	a = ft_strnew(i);
+	if (!a)
+		return (NULL);
+	ft_strcpy(a, s1);
+	if (needslash)
+		a[s1l] = '/';
+	ft_strcpy(a + s1l + needslash, s2);
+	return (a);
+}

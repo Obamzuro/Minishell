@@ -6,7 +6,7 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/13 15:05:22 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/16 14:01:13 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/17 15:20:41 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,15 +147,26 @@ int		change_dir_back(char ***env)
 int		change_dir(char **args, char ***env)
 {
 	struct stat		mystat;
-//	size_t			amargs;
-//	char			**args;
 	char			*pwd;
 	char			*path;
 	int				yep;
 	char			*line;
 
-//	amargs = ft_wcount(line, ' ');
-//	args = ft_strsplit(line, ' ');
+	if (args[1])
+	{
+		if (args[1][0] == '~')
+		{
+			line = ft_strjoin(get_env("HOME", *env), args[1] + 1);
+			free(args[1]);
+			args[1] = line;
+		}
+		if (args[2] && args[2][0] == '~')
+		{
+			line = ft_strjoin(get_env("HOME", *env), args[2] + 1);
+			free(args[2]);
+			args[2] = line;
+		}
+	}
 	pwd = getcwd(0, 0);
 	if (args[1] && args[2] && args[3])
 		ft_printf("cd: too many arguments\n");
@@ -231,9 +242,10 @@ char	*ft_exec_path(char **args, char ***env)
 
 void	int_handler(int sig)
 {
-	signal(sig, SIG_IGN);
-	kill(g_child, SIGINT);
-	ft_printf("HERE\n");
+//	signal(sig, SIG_IGN);
+//	kill(g_child, SIGINT);
+	write(1, "\n$> ", 4);
+//	signal(sig, int_handler);
 }
 
 int		ft_exec(char **args, char ***env)
@@ -249,7 +261,10 @@ int		ft_exec(char **args, char ***env)
 	if (process == 0)
 	{
 		if (execve(comm, args, *env) == -1)
+		{
 			ft_printf("Not a right comm\n");
+			exit(EXIT_FAILURE);
+		}
 	}
 	else if (process > 0)
 	{
@@ -306,7 +321,7 @@ int		main(void)
 	extern char		**environ;
 
 	signal(SIGINT, int_handler);
-	signal(SIGSTOP, int_handler);
+//	signal(SIGSTOP, int_handler);
 	fill_commands(commands);
 	env = fill_env();
 	while (1)
@@ -318,6 +333,8 @@ int		main(void)
 			continue;
 		}
 		args = ft_strsplit(line, ' ');
+		if (!args[0])
+			continue;
 		i = -1;
 		while (++i < AM_COMMANDS)
 		{
