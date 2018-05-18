@@ -6,7 +6,7 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/13 15:05:22 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/17 15:20:41 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/18 11:55:59 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,7 +244,14 @@ void	int_handler(int sig)
 {
 //	signal(sig, SIG_IGN);
 //	kill(g_child, SIGINT);
-	write(1, "\n$> ", 4);
+	if (sig == SIGINT)
+	{
+		signal(SIGINT, int_handler);
+		if (g_sigint == 0)
+			write(1, "\n$> ", 4);
+		else
+			write(1, "\n", 1);
+	}
 //	signal(sig, int_handler);
 }
 
@@ -320,6 +327,7 @@ int		main(void)
 	t_comm_corr commands[AM_COMMANDS];
 	extern char		**environ;
 
+	g_sigint = 0;
 	signal(SIGINT, int_handler);
 //	signal(SIGSTOP, int_handler);
 	fill_commands(commands);
@@ -327,11 +335,13 @@ int		main(void)
 	while (1)
 	{
 		ft_printf("$> ");
+		g_sigint = 0;
 		if ((a = get_next_line(0, &line)) == -1)
 		{
 			ft_printf("123\n");
 			continue;
 		}
+		g_sigint = 1;
 		args = ft_strsplit(line, ' ');
 		if (!args[0])
 			continue;
