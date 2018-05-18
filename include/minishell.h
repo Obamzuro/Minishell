@@ -6,13 +6,13 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/13 15:06:10 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/18 11:52:13 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/18 13:26:16 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef __MINISHELL_H
 # define __MINISHELL_H
-# define AM_COMMANDS 5
+# define AM_COMMANDS 7
 # include <unistd.h>
 # include <signal.h>
 # include <sys/stat.h>

@@ -6,7 +6,7 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/24 22:58:58 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/03/26 19:41:46 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/18 13:12:09 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,33 @@ char			**ft_strsplit(const char *s, char c)
 			return (del_prev(a, i));
 		i++;
 		s += ft_ccount(s, c);
+	}
+	a[i] = 0;
+	return (a);
+}
+
+char			**ft_strsplit2(const char *s, const char *c)
+{
+	char	**a;
+	size_t	i;
+
+	if (!s)
+		return (NULL);
+	a = (char **)malloc((ft_wcount2(s, c) + 1) * sizeof(char *));
+	if (!a)
+		return (NULL);
+	i = 0;
+	while (1)
+	{
+		while (ft_strchr(c, *s) && *s)
+			s++;
+		if (!*s)
+			break ;
+		a[i] = ft_strsub(s, 0, ft_ccount2(s, c));
+		if (!a[i])
+			return (del_prev(a, i));
+		i++;
+		s += ft_ccount2(s, c);
 	}
 	a[i] = 0;
 	return (a);
