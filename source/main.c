@@ -6,7 +6,7 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/13 15:05:22 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/18 19:30:00 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/18 20:28:29 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,7 @@ int		change_dir(char **args, char ***env)
 	{
 		if (args[1][0] == '-' && !args[1][1])
 			change_dir_back(env);
-		else if (lstat(args[1], &mystat) == -1)
+		else if (stat(args[1], &mystat) == -1)
 			ft_printf("cd: no such file or directory: %s\n", args[1]);
 		else if (!S_ISDIR(mystat.st_mode))
 			ft_printf("cd: not a directory: %s\n", args[1]);
@@ -192,7 +192,7 @@ int		change_dir(char **args, char ***env)
 			ft_strncat(path, pwd, line - pwd);
 			ft_strcat(path, args[2]);
 			ft_strcat(path, line + ft_strlen(args[1]));
-			if (lstat(path, &mystat) == -1)
+			if (stat(path, &mystat) == -1)
 				ft_printf("cd: no such file or directory: %s\n", path);
 			else if (!S_ISDIR(mystat.st_mode))
 				ft_printf("cd: not a directory: %s\n", path);
@@ -206,6 +206,9 @@ int		change_dir(char **args, char ***env)
 			ft_printf("cd: string not in pwd: %s\n", args[1]);
 	}
 	set_env_inner("OLDPWD", pwd, env);
+	free(pwd);
+	pwd = getcwd(0, 0);
+	set_env_inner("PWD", pwd, env);
 	free(pwd);
 	return (0);
 }
@@ -230,6 +233,11 @@ char		*ft_exec_path(char **args, char ***env)
 
 	paths = ft_strsplit(get_env("PATH", *env), ':');
 	i = 0;
+	if (!paths)
+	{
+		ft_printf("minishell: command not found: %s\n", args[0]);
+		return (0);
+	}
 	while (paths[i])
 	{
 		temp = msh_strjoin_char(paths[i], args[0], '/');
