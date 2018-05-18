@@ -6,7 +6,7 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/13 15:05:22 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/18 20:28:29 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/18 20:48:05 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -408,7 +408,7 @@ void	handle_commands(char *line, t_comm_corr commands[AM_COMMANDS], char ***env)
 	i = -1;
 	while (++i < AM_COMMANDS)
 	{
-		if (!ft_strncmp(commands[i].comm, args[0], ft_strlen(commands[i].comm)))
+		if (!ft_strncmp(commands[i].comm, args[0], ft_strlen(commands[i].comm) + 1))
 		{
 			commands[i].func(args, env);
 			break ;
