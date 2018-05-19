@@ -1,32 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   msh_strjoin.c                                      :+:      :+:    :+:   */
+/*   msh_echo.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/05/15 09:35:23 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/19 13:53:14 by obamzuro         ###   ########.fr       */
+/*   Created: 2018/05/19 13:52:29 by obamzuro          #+#    #+#             */
+/*   Updated: 2018/05/19 13:52:30 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*msh_strjoin_char(const char *s1, const char *s2, char c)
+int			ft_echo(char **args, char ***env)
 {
-	char	*a;
-	size_t	i;
-	size_t	s1l;
+	int		i;
+	int		first;
 
-	if (!s1 || !s2)
-		return (NULL);
-	s1l = ft_strlen(s1);
-	i = s1l + ft_strlen(s2) + 2;
-	a = ft_strnew(i);
-	if (!a)
-		return (NULL);
-	ft_strcpy(a, s1);
-	a[s1l] = c;
-	ft_strcpy(a + s1l + 1, s2);
-	return (a);
+	i = 1;
+	first = 0;
+	while (args[i])
+	{
+		if (!first)
+		{
+			ft_printf("%s", args[i]);
+			first = 1;
+		}
+		else
+			ft_printf(" %s", args[i]);
+		++i;
+	}
+	ft_printf("\n");
+	return (0);
 }

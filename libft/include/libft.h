@@ -6,13 +6,13 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/20 11:38:42 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/18 13:11:21 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/19 12:19:27 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
-# define BUFF_SIZE 1024
+# define BUFF_SIZE 1444
 # define SMARTCHECK(x) if (!(x)) return (-1)
 # include <string.h>
 # include <stdlib.h>

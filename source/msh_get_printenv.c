@@ -1,32 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   msh_strjoin.c                                      :+:      :+:    :+:   */
+/*   msh_get_printenv.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/05/15 09:35:23 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/19 13:53:14 by obamzuro         ###   ########.fr       */
+/*   Created: 2018/05/19 13:52:51 by obamzuro          #+#    #+#             */
+/*   Updated: 2018/05/19 13:52:51 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*msh_strjoin_char(const char *s1, const char *s2, char c)
+char		*get_env(char *key, char **env)
 {
-	char	*a;
-	size_t	i;
-	size_t	s1l;
+	int		i;
 
-	if (!s1 || !s2)
-		return (NULL);
-	s1l = ft_strlen(s1);
-	i = s1l + ft_strlen(s2) + 2;
-	a = ft_strnew(i);
-	if (!a)
-		return (NULL);
-	ft_strcpy(a, s1);
-	a[s1l] = c;
-	ft_strcpy(a + s1l + 1, s2);
-	return (a);
+	i = 0;
+	while (env[i])
+	{
+		if (ft_strcmp(env[i], key) == '=')
+			return (env[i] + ft_strlen(key) + 1);
+		++i;
+	}
+	return (0);
+}
+
+int			print_env(char **args, char ***env)
+{
+	int		i;
+
+	i = 0;
+	while ((*env)[i])
+		ft_printf("%s\n", (*env)[i++]);
+	i = args + 1 - args;
+	return (0);
 }
