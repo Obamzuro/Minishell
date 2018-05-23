@@ -6,7 +6,7 @@
 #    By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/11 15:56:03 by obamzuro          #+#    #+#              #
-#    Updated: 2018/05/23 20:02:03 by obamzuro         ###   ########.fr        #
+#    Updated: 2018/05/23 20:04:01 by obamzuro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,21 +39,21 @@ HDR = include/minishell.h
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	make -C libf
+	make -C mylibft
 	make -C ftprintf
-	gcc $(FLAGS) -I $(HDRDIR) $(OBJ) -L libf -lft -L ftprintf -lftprintf -o $(NAME)
+	gcc $(FLAGS) -I $(HDRDIR) $(OBJ) -L mylibft -lft -L ftprintf -lftprintf -o $(NAME)
 
 %.o: %.c $(HDR)
 	gcc $(FLAGS) -I $(HDRDIR) -c $< -o $@
 
 clean:
-	make -C libf clean
+	make -C mylibft clean
 	make -C ftprintf clean
 	find . -name "*.o" -o -name ".*.sw[pon]" -exec rm -rf {} \;
 	rm -rf $(OBJ)
 
 fclean: clean
-	make -C libf fclean
+	make -C mylibft fclean
 	make -C ftprintf fclean
 	rm -rf $(NAME)
 
