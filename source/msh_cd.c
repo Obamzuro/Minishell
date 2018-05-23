@@ -6,7 +6,7 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 13:52:21 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/23 15:02:45 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/23 15:42:21 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,9 @@ static void			change_dir_one_arg(char **args, char ***env)
 	if (args[1][0] == '-' && !args[1][1])
 	{
 		value = get_env("OLDPWD", *env);
-		if (value && !check_dir_err(value))
+		if (!value)
+			ft_fprintf(2, "cd: OLDPWD env missed\n");
+		else if (!check_dir_err(value))
 			chdir(value);
 	}
 	else if (!check_dir_err(args[1]))
@@ -104,13 +106,15 @@ void				change_dir(char **args, char ***env)
 	oldpwd = getcwd(0, 0);
 	change_dir_home_sign(args, env);
 	home = get_env("HOME", *env);
-	if (args[1] && args[2] && args[3])
+	if (args[0] && args[1] && args[2] && args[3])
 		ft_fprintf(2, "cd: too many arguments\n");
-	else if (!args[1] && home && !check_dir_err(home))
+	else if (args[0] && !args[1] && !home)
+		ft_fprintf(2, "cd: HOME env missed\n");
+	else if (args[0] && !args[1] && home && !check_dir_err(home))
 		chdir(home);
-	else if (!args[2])
+	else if (args[0] && args[1] && !args[2])
 		change_dir_one_arg(args, env);
-	else if (!args[3])
+	else if (args[0] && args[1] && args[2] && !args[3])
 		change_dir_two_args(args, oldpwd);
 	pwd = getcwd(0, 0);
 	if (ft_strcmp(pwd, oldpwd))
