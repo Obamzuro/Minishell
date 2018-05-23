@@ -6,7 +6,7 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 13:52:21 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/23 13:53:34 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/23 15:02:45 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,12 +70,13 @@ static void			change_dir_one_arg(char **args, char ***env)
 		chdir(args[1]);
 }
 
-static void			change_dir_two_args(char **args, char ***env, char *pwd)
+static void			change_dir_two_args(char **args, char *pwd)
 {
 	char			*line;
 	char			*path;
 	int				len;
 
+	path = 0;
 	if ((line = ft_strstr(pwd, args[1])))
 	{
 		len = ft_strlen(pwd) + ft_strlen(args[2]) - ft_strlen(args[1]) + 1;
@@ -98,8 +99,6 @@ void				change_dir(char **args, char ***env)
 {
 	char			*oldpwd;
 	char			*pwd;
-	char			*path;
-	char			*line;
 	char			*home;
 
 	oldpwd = getcwd(0, 0);
@@ -112,7 +111,7 @@ void				change_dir(char **args, char ***env)
 	else if (!args[2])
 		change_dir_one_arg(args, env);
 	else if (!args[3])
-		change_dir_two_args(args, env, pwd);
+		change_dir_two_args(args, oldpwd);
 	pwd = getcwd(0, 0);
 	if (ft_strcmp(pwd, oldpwd))
 		set_env("OLDPWD", oldpwd, env);

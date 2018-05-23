@@ -6,7 +6,7 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 13:53:18 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/23 13:14:01 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/23 15:05:17 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ void				unset_env(char **args, char ***env)
 {
 	char	**newenv;
 	int		i;
-	int		flag;
 
 	if (!get_env(args[1], *env))
 		return ;

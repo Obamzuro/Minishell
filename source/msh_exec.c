@@ -6,18 +6,19 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 13:52:33 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/23 14:44:20 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/23 15:04:48 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char		*ft_exec_path_find_comm(char **args, char ***env, char **paths)
+static char		*ft_exec_path_find_comm(char **args, char **paths)
 {
 	int			i;
 	struct stat	mystat;
 	char		*temp;
 
+	i = 0;
 	while (paths[i])
 	{
 		temp = ft_strjoin_char(paths[i], args[0], '/');
@@ -43,7 +44,6 @@ static char		*ft_exec_path(char **args, char ***env)
 {
 	char		**paths;
 	int			i;
-	struct stat	mystat;
 	char		*ret;
 
 	paths = ft_strsplit(get_env("PATH", *env), ':');
@@ -53,12 +53,12 @@ static char		*ft_exec_path(char **args, char ***env)
 		ft_fprintf(2, "minishell: command not found: %s\n", args[0]);
 		return (0);
 	}
-	ret = ft_exec_path_find_comm(args, env, paths);
+	ret = ft_exec_path_find_comm(args, paths);
 	free_double_arr(paths);
 	return (ret);
 }
 
-static int		ft_exec_check_err(char **args, char ***env, char *comm)
+static int		ft_exec_check_err(char **args, char *comm)
 {
 	struct stat	tempstat;
 
@@ -84,7 +84,6 @@ static int		ft_exec_check_err(char **args, char ***env, char *comm)
 static int		ft_exec_fork(char **args, char ***env, char *comm)
 {
 	pid_t		process;
-	struct stat	tempstat;
 
 	process = fork();
 	if (process == 0)
@@ -125,7 +124,7 @@ void			ft_exec(char **args, char ***env)
 		}
 		comm = args[0];
 	}
-	if (!ft_exec_check_err(args, env, comm))
+	if (!ft_exec_check_err(args, comm))
 		return ;
 	ret = ft_exec_fork(args, env, comm);
 	if (comm != args[0])

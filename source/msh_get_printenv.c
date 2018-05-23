@@ -6,7 +6,7 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 13:52:51 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/22 18:55:41 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/23 15:05:08 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void		print_env(char **args, char ***env)
 {
 	int		i;
 
+	args++;
 	i = 0;
 	while ((*env)[i])
 		ft_printf("%s\n", (*env)[i++]);

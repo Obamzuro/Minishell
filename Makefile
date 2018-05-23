@@ -6,7 +6,7 @@
 #    By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/11 15:56:03 by obamzuro          #+#    #+#              #
-#    Updated: 2018/05/23 14:29:36 by obamzuro         ###   ########.fr        #
+#    Updated: 2018/05/23 15:00:52 by obamzuro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,10 +41,10 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	make -C libft
 	make -C ftprintf
-	gcc -g -I $(HDRDIR) $(OBJ) -L libft -lft -L ftprintf -lftprintf -o $(NAME)
+	gcc $(FLAGS) -I $(HDRDIR) $(OBJ) -L libft -lft -L ftprintf -lftprintf -o $(NAME)
 
 %.o: %.c $(HDR)
-	gcc -g -I $(HDRDIR) -c $< -o $@
+	gcc $(FLAGS) -I $(HDRDIR) -c $< -o $@
 
 clean:
 	make -C libft clean

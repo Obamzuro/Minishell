@@ -6,7 +6,7 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 13:52:29 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/22 18:55:07 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/23 15:03:50 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void			ft_echo(char **args, char ***env)
 
 	i = 1;
 	first = 0;
+	++env;
 	while (args[i])
 	{
 		if (!first)
