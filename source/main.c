@@ -6,7 +6,7 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/13 15:05:22 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/23 14:31:00 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/23 19:19:04 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ static void			handle_commands(char *line,
 	char	**args;
 
 	if (!(args = ft_strsplit2(line, " \t"))[0])
+	{
+		free_double_arr(args);
 		return ;
+	}
 	replace_env_variable(args, *env);
 	i = -1;
 	while (++i < AM_COMMANDS)

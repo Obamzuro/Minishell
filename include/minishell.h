@@ -6,7 +6,7 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/13 15:06:10 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/23 13:12:26 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/23 19:07:43 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char					*msh_strjoin_path(const char *s1, const char *s2);
 
 char					**fill_env(void);
 void					fill_commands(t_comm_corr *commands);
-int						replace_env_variable(char **args, char **env);
+void					replace_env_variable(char **args, char **env);
 
 void					change_dir(char **args, char ***env);
 void					ft_echo(char **args, char ***env);

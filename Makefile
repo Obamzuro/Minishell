@@ -6,7 +6,7 @@
 #    By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/11 15:56:03 by obamzuro          #+#    #+#              #
-#    Updated: 2018/05/23 15:39:56 by obamzuro         ###   ########.fr        #
+#    Updated: 2018/05/23 19:41:13 by obamzuro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ SRCNAME = main.c		\
 		  msh_unsetenv.c\
 		  msh_replace_env_variable.c\
 
-FLAGS = -g -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror
 
 SRC = $(addprefix source/, $(SRCNAME))
 

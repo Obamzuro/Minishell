@@ -6,57 +6,77 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/23 12:24:29 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/23 14:30:52 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/23 19:12:02 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void			replace_env_variable_join(int counter, char **str,
-		char **strsplitted, char **env)
+static int			replace_env_variable_repl_end(char **args,
+		char **env, int i, int *j)
 {
 	char	*temp;
 
-	if (counter == 0)
-	{
-		free(*str);
-		if ((*str)[0] != '$')
-		{
-			*str = ft_strdup(strsplitted[0]);
-			return ;
-		}
-		else
-			*str = 0;
-	}
-	temp = *str;
-	*str = ft_strjoin(temp, get_env(strsplitted[counter], env));
+	temp = args[i];
+	args[i] = ft_strjoin(temp, get_env(args[i] + *j + 1, env));
 	free(temp);
-	return ;
+	return (1);
 }
 
-int					replace_env_variable(char **args, char **env)
+static int			replace_env_variable_repl(char **args, char **env,
+		int i, int *j)
+{
+	char	*temp;
+	char	*temp2;
+	char	*foundstable;
+
+	temp = 0;
+	args[i][*j] = 0;
+	foundstable = ft_strchr(args[i] + *j + 1, '$');
+	if (!foundstable && replace_env_variable_repl_end(args, env, i, j))
+		return (1);
+	else
+	{
+		temp = ft_strsub(args[i], *j + 1, foundstable - args[i] - *j - 1);
+		temp2 = get_env(temp, env);
+		*j += ft_strlen(temp2);
+		free(temp);
+		temp = args[i];
+		args[i] = ft_strjoin(temp, temp2);
+		temp2 = ft_strdup(foundstable);
+		free(temp);
+		temp = args[i];
+		args[i] = ft_strjoin(temp, temp2);
+		free(temp);
+		free(temp2);
+	}
+	return (0);
+}
+
+void				replace_env_variable(char **args, char **env)
 {
 	int		i;
 	int		j;
-	char	*temp;
-	char	end;
-	char	**strsplitted;
 
 	i = 0;
 	while (args[++i])
 	{
-		strsplitted = ft_strsplit(args[i], '$');
-		end = *(ft_eol(args[i]));
-		j = -1;
-		while (strsplitted[++j])
-			replace_env_variable_join(j, &args[i], strsplitted, env);
-		if (end == '$')
+		j = 0;
+		while (args[i][j])
 		{
-			temp = args[i];
-			args[i] = ft_strjoin(args[i], "$");
-			free(temp);
+			if (args[i][j] == '$')
+			{
+				if (args[i][j + 1] == '$' || !args[i][j + 1])
+				{
+					++j;
+					continue ;
+				}
+				else if (replace_env_variable_repl(args, env, i, &j))
+					break ;
+			}
+			else
+				++j;
 		}
-		free_double_arr(strsplitted);
 	}
-	return (0);
+	return ;
 }
