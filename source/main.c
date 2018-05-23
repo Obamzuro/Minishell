@@ -6,20 +6,21 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/13 15:05:22 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/23 13:13:10 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/23 14:31:00 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int			handle_commands(char *line,
+static void			handle_commands(char *line,
 		t_comm_corr commands[AM_COMMANDS],
 		char ***env)
 {
 	int		i;
 	char	**args;
 
-	args = ft_strsplit2(line, " \t");
+	if (!(args = ft_strsplit2(line, " \t"))[0])
+		return ;
 	replace_env_variable(args, *env);
 	i = -1;
 	while (++i < AM_COMMANDS)
@@ -34,7 +35,6 @@ static int			handle_commands(char *line,
 	if (i == AM_COMMANDS)
 		ft_exec(args, env);
 	free_double_arr(args);
-	return (0);
 }
 
 int					main(void)

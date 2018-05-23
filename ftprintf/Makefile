@@ -6,7 +6,7 @@
 #    By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/03/20 11:09:03 by obamzuro          #+#    #+#              #
-#    Updated: 2018/05/23 13:20:36 by obamzuro         ###   ########.fr        #
+#    Updated: 2018/05/23 14:02:22 by obamzuro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,13 +44,7 @@ $(NAME): $(OBJECT)
 	ranlib $(NAME)
 
 %.o:%.c
-	gcc -Wall -Wextra -Werror -o $@ -c $< -I $(HDIR)
-
-mai: main.c $(NAME)
-	gcc main.c -I $(HDIR) -L . -lftprintf
-
-pf: speedtest_printf.c $(NAME)
-	gcc -pg speedtest_printf.c -I $(HDIR) -L . -lftprintf -o pf
+	gcc -g -Wall -Wextra -Werror -o $@ -c $< -I $(HDIR)
 
 clean:
 	rm -f $(OBJECT)

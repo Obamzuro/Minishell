@@ -6,7 +6,7 @@
 #    By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/11 15:56:03 by obamzuro          #+#    #+#              #
-#    Updated: 2018/05/23 13:21:24 by obamzuro         ###   ########.fr        #
+#    Updated: 2018/05/23 14:29:36 by obamzuro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ SRCNAME = main.c		\
 		  msh_setenv.c\
 		  msh_signal_handler.c\
 		  msh_unsetenv.c\
-		  msh_replace_env_variable.c
+		  msh_replace_env_variable.c\
 
 FLAGS = -Wall -Wextra -Werror
 
@@ -44,12 +44,13 @@ $(NAME): $(OBJ)
 	gcc -g -I $(HDRDIR) $(OBJ) -L libft -lft -L ftprintf -lftprintf -o $(NAME)
 
 %.o: %.c $(HDR)
-	gcc -I $(HDRDIR) -c $< -o $@
+	gcc -g -I $(HDRDIR) -c $< -o $@
 
 clean:
 	make -C libft clean
 	make -C ftprintf clean
 	find . -name "*.o" -o -name ".*.sw[pon]" -exec rm -rf {} \;
+	rm -rf $(OBJ)
 
 fclean: clean
 	make -C libft fclean

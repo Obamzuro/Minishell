@@ -6,20 +6,33 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 13:52:21 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/23 13:13:21 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/23 13:53:34 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void			change_dir_back(char ***env)
+static int			check_dir_err(char *pathname)
 {
-	char	*value;
+	struct stat		mystat;
 
-	value = get_env("OLDPWD", *env);
-	if (!value)
-		return ;
-	chdir(value);
+	if (stat(pathname, &mystat) == -1)
+	{
+		ft_fprintf(2, "cd: no such file or directory: %s\n", pathname);
+		return (1);
+	}
+	else if (!S_ISDIR(mystat.st_mode))
+	{
+		ft_fprintf(2, "cd: not a directory: %s\n", pathname);
+		return (1);
+	}
+	else if (access(pathname, X_OK) == -1)
+	{
+		ft_fprintf(2, "cd: permission denied: %s\n", pathname);
+		return (1);
+	}
+	else
+		return (0);
 }
 
 static void			change_dir_home_sign(char **args, char ***env)
@@ -45,17 +58,15 @@ static void			change_dir_home_sign(char **args, char ***env)
 
 static void			change_dir_one_arg(char **args, char ***env)
 {
-	struct stat		mystat;
+	char	*value;
 
 	if (args[1][0] == '-' && !args[1][1])
-		change_dir_back(env);
-	else if (stat(args[1], &mystat) == -1)
-		ft_fprintf(2, "cd: no such file or directory: %s\n", args[1]);
-	else if (!S_ISDIR(mystat.st_mode))
-		ft_fprintf(2, "cd: not a directory: %s\n", args[1]);
-	else if (access(args[1], X_OK) == -1)
-		ft_fprintf(2, "cd: permission denied: %s\n", args[1]);
-	else
+	{
+		value = get_env("OLDPWD", *env);
+		if (value && !check_dir_err(value))
+			chdir(value);
+	}
+	else if (!check_dir_err(args[1]))
 		chdir(args[1]);
 }
 
@@ -63,7 +74,6 @@ static void			change_dir_two_args(char **args, char ***env, char *pwd)
 {
 	char			*line;
 	char			*path;
-	struct stat		mystat;
 	int				len;
 
 	if ((line = ft_strstr(pwd, args[1])))
@@ -73,11 +83,7 @@ static void			change_dir_two_args(char **args, char ***env, char *pwd)
 		ft_strncat(path, pwd, line - pwd);
 		ft_strcat(path, args[2]);
 		ft_strcat(path, line + ft_strlen(args[1]));
-		if (stat(path, &mystat) == -1)
-			ft_fprintf(2, "cd: no such file or directory: %s\n", path);
-		else if (!S_ISDIR(mystat.st_mode))
-			ft_fprintf(2, "cd: not a directory: %s\n", path);
-		else
+		if (!check_dir_err(path))
 		{
 			ft_printf("%s\n", path);
 			chdir(path);
@@ -90,25 +96,26 @@ static void			change_dir_two_args(char **args, char ***env, char *pwd)
 
 void				change_dir(char **args, char ***env)
 {
-	struct stat		mystat;
 	char			*oldpwd;
 	char			*pwd;
 	char			*path;
 	char			*line;
+	char			*home;
 
 	oldpwd = getcwd(0, 0);
 	change_dir_home_sign(args, env);
+	home = get_env("HOME", *env);
 	if (args[1] && args[2] && args[3])
 		ft_fprintf(2, "cd: too many arguments\n");
-	else if (!args[1])
-		chdir(get_env("HOME", *env));
+	else if (!args[1] && home && !check_dir_err(home))
+		chdir(home);
 	else if (!args[2])
 		change_dir_one_arg(args, env);
 	else if (!args[3])
 		change_dir_two_args(args, env, pwd);
 	pwd = getcwd(0, 0);
 	if (ft_strcmp(pwd, oldpwd))
-		set_env("OLDPWD", pwd, env);
+		set_env("OLDPWD", oldpwd, env);
 	set_env("PWD", pwd, env);
 	free(oldpwd);
 	free(pwd);
