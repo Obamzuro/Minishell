@@ -6,21 +6,20 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 13:52:21 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/19 13:52:21 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/23 13:13:21 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int			change_dir_back(char ***env)
+static void			change_dir_back(char ***env)
 {
 	char	*value;
 
 	value = get_env("OLDPWD", *env);
 	if (!value)
-		return (1);
+		return ;
 	chdir(value);
-	return (0);
 }
 
 static void			change_dir_home_sign(char **args, char ***env)
@@ -51,9 +50,11 @@ static void			change_dir_one_arg(char **args, char ***env)
 	if (args[1][0] == '-' && !args[1][1])
 		change_dir_back(env);
 	else if (stat(args[1], &mystat) == -1)
-		ft_printf("cd: no such file or directory: %s\n", args[1]);
+		ft_fprintf(2, "cd: no such file or directory: %s\n", args[1]);
 	else if (!S_ISDIR(mystat.st_mode))
-		ft_printf("cd: not a directory: %s\n", args[1]);
+		ft_fprintf(2, "cd: not a directory: %s\n", args[1]);
+	else if (access(args[1], X_OK) == -1)
+		ft_fprintf(2, "cd: permission denied: %s\n", args[1]);
 	else
 		chdir(args[1]);
 }
@@ -73,9 +74,9 @@ static void			change_dir_two_args(char **args, char ***env, char *pwd)
 		ft_strcat(path, args[2]);
 		ft_strcat(path, line + ft_strlen(args[1]));
 		if (stat(path, &mystat) == -1)
-			ft_printf("cd: no such file or directory: %s\n", path);
+			ft_fprintf(2, "cd: no such file or directory: %s\n", path);
 		else if (!S_ISDIR(mystat.st_mode))
-			ft_printf("cd: not a directory: %s\n", path);
+			ft_fprintf(2, "cd: not a directory: %s\n", path);
 		else
 		{
 			ft_printf("%s\n", path);
@@ -83,30 +84,32 @@ static void			change_dir_two_args(char **args, char ***env, char *pwd)
 		}
 	}
 	else
-		ft_printf("cd: string not in pwd: %s\n", args[1]);
+		ft_fprintf(2, "cd: string not in pwd: %s\n", args[1]);
 	free(path);
 }
 
-int					change_dir(char **args, char ***env)
+void				change_dir(char **args, char ***env)
 {
 	struct stat		mystat;
+	char			*oldpwd;
 	char			*pwd;
 	char			*path;
 	char			*line;
 
-	pwd = getcwd(0, 0);
+	oldpwd = getcwd(0, 0);
+	change_dir_home_sign(args, env);
 	if (args[1] && args[2] && args[3])
-		ft_printf("cd: too many arguments\n");
+		ft_fprintf(2, "cd: too many arguments\n");
 	else if (!args[1])
 		chdir(get_env("HOME", *env));
 	else if (!args[2])
 		change_dir_one_arg(args, env);
 	else if (!args[3])
 		change_dir_two_args(args, env, pwd);
-	set_env("OLDPWD", pwd, env);
-	free(pwd);
 	pwd = getcwd(0, 0);
+	if (ft_strcmp(pwd, oldpwd))
+		set_env("OLDPWD", pwd, env);
 	set_env("PWD", pwd, env);
+	free(oldpwd);
 	free(pwd);
-	return (0);
 }

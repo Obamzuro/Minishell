@@ -6,13 +6,13 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/20 11:38:42 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/19 12:19:27 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/23 12:29:32 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
-# define BUFF_SIZE 1444
+# define BUFF_SIZE 1024
 # define SMARTCHECK(x) if (!(x)) return (-1)
 # include <string.h>
 # include <stdlib.h>
@@ -111,4 +111,8 @@ void			ft_swap_pointers(void **ptr1, void **ptr2);
 char			**ft_strsplit2(const char *s, const char *c);
 size_t			ft_ccount2(const char *s, const char *c);
 size_t			ft_wcount2(const char *s, const char *c);
+
+char			*ft_eol(char *str);
+char			*ft_strjoin_char(const char *s1, const char *s2, char c);
+char			*ft_strjoin_path(const char *s1, const char *s2);
 #endif

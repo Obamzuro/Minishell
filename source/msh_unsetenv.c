@@ -6,13 +6,13 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 13:53:18 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/19 13:53:19 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/23 13:14:01 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void		unset_env_cpenv(char **args, char ***env, char **newenv)
+static void			unset_env_cpenv(char **args, char ***env, char **newenv)
 {
 	int		i;
 	int		flag;
@@ -37,18 +37,17 @@ static void		unset_env_cpenv(char **args, char ***env, char **newenv)
 	*env = newenv;
 }
 
-int				unset_env(char **args, char ***env)
+void				unset_env(char **args, char ***env)
 {
 	char	**newenv;
 	int		i;
 	int		flag;
 
 	if (!get_env(args[1], *env))
-		return (1);
+		return ;
 	i = 0;
 	while ((*env)[i])
 		++i;
 	newenv = (char **)malloc(sizeof(char *) * (i));
 	unset_env_cpenv(args, env, newenv);
-	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 13:53:02 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/19 14:15:33 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/23 12:40:59 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int			set_env_check_existing(char *key, char *value, char **env)
 		if (ft_strcmp(env[i], key) == '=')
 		{
 			free(env[i]);
-			env[i] = msh_strjoin_char(key, value, '=');
+			env[i] = ft_strjoin_char(key, value, '=');
 			return (1);
 		}
 		++i;
@@ -30,13 +30,13 @@ static int			set_env_check_existing(char *key, char *value, char **env)
 	return (0);
 }
 
-int					set_env(char *key, char *value, char ***env)
+void				set_env(char *key, char *value, char ***env)
 {
 	int		i;
 	char	**newenv;
 
 	if (set_env_check_existing(key, value, *env))
-		return (0);
+		return ;
 	i = 0;
 	while ((*env)[i])
 		++i;
@@ -48,25 +48,24 @@ int					set_env(char *key, char *value, char ***env)
 		free((*env)[i]);
 		++i;
 	}
-	newenv[i] = msh_strjoin_char(key, value, '=');
+	newenv[i] = ft_strjoin_char(key, value, '=');
 	newenv[i + 1] = 0;
 	free(*env);
 	*env = newenv;
-	return (0);
 }
 
-int					set_env_comm(char **args, char ***env)
+void				set_env_comm(char **args, char ***env)
 {
 	if (args[1] == 0 || args[2] == 0)
 	{
-		ft_printf("setenv: not enough arguments\n");
-		return (1);
+		ft_fprintf(2, "setenv: not enough arguments\n");
+		return ;
 	}
 	else if (args[3] != 0)
 	{
-		ft_printf("setenv: too many arguments\n");
-		return (1);
+		ft_fprintf(2, "setenv: too many arguments\n");
+		return ;
 	}
 	set_env(args[1], args[2], env);
-	return (0);
+	return ;
 }

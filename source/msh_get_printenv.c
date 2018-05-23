@@ -6,7 +6,7 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 13:52:51 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/19 13:52:51 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/22 18:55:41 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,26 @@
 char		*get_env(char *key, char **env)
 {
 	int		i;
+	char	*envvalue;
 
 	i = 0;
 	while (env[i])
 	{
+		if (!(envvalue = ft_strchr(env[i], '=')))
+			continue ;
 		if (ft_strcmp(env[i], key) == '=')
-			return (env[i] + ft_strlen(key) + 1);
+			return (envvalue + 1);
 		++i;
 	}
 	return (0);
 }
 
-int			print_env(char **args, char ***env)
+void		print_env(char **args, char ***env)
 {
 	int		i;
 
 	i = 0;
 	while ((*env)[i])
 		ft_printf("%s\n", (*env)[i++]);
-	i = args + 1 - args;
-	return (0);
+	return ;
 }

@@ -6,13 +6,13 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 13:52:38 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/19 13:52:39 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/22 18:55:29 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int			ft_exit(char **args, char ***env)
+void		ft_exit(char **args, char ***env)
 {
 	exit(0);
 }

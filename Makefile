@@ -6,15 +6,13 @@
 #    By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/11 15:56:03 by obamzuro          #+#    #+#              #
-#    Updated: 2018/05/19 13:54:26 by obamzuro         ###   ########.fr        #
+#    Updated: 2018/05/23 13:21:24 by obamzuro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
 SRCNAME = main.c		\
-		  msh_strjoin.c	\
-		  msh_strjoin_path.c\
 		  msh_cd.c\
 		  msh_echo.c\
 		  msh_exec.c\
@@ -25,7 +23,8 @@ SRCNAME = main.c		\
 		  msh_print_pwd.c\
 		  msh_setenv.c\
 		  msh_signal_handler.c\
-		  msh_unsetenv.c
+		  msh_unsetenv.c\
+		  msh_replace_env_variable.c
 
 FLAGS = -Wall -Wextra -Werror
 
@@ -45,12 +44,12 @@ $(NAME): $(OBJ)
 	gcc -g -I $(HDRDIR) $(OBJ) -L libft -lft -L ftprintf -lftprintf -o $(NAME)
 
 %.o: %.c $(HDR)
-	gcc -g -I $(HDRDIR) -c $< -o $@
+	gcc -I $(HDRDIR) -c $< -o $@
 
 clean:
 	make -C libft clean
 	make -C ftprintf clean
-	find . -name "*.o" -exec rm -rf {} \;
+	find . -name "*.o" -o -name ".*.sw[pon]" -exec rm -rf {} \;
 
 fclean: clean
 	make -C libft fclean

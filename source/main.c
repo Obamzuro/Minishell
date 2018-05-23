@@ -6,48 +6,20 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/13 15:05:22 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/20 19:33:58 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/23 13:13:10 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void		replace_env_variable(char **args, char **env)
-{
-	int		i;
-	int		j;
-	char	*temp;
-
-	i = 0;
-	while (args[++i])
-	{
-		j = -1;
-		while (args[i][++j])
-		{
-			if (args[i][j] == '$')
-			{
-				args[i][j] = 0;
-				temp = args[i];
-				args[i] = ft_strjoin(args[i], get_env(args[i] + j + 1, env));
-				free(temp);
-				break ;
-			}
-		}
-	}
-}
-
-static void		handle_commands(char *line, t_comm_corr commands[AM_COMMANDS],
+static int			handle_commands(char *line,
+		t_comm_corr commands[AM_COMMANDS],
 		char ***env)
 {
 	int		i;
 	char	**args;
 
 	args = ft_strsplit2(line, " \t");
-	if (!args[0])
-	{
-//		free(args);
-		return ;
-	}
 	replace_env_variable(args, *env);
 	i = -1;
 	while (++i < AM_COMMANDS)
@@ -61,10 +33,11 @@ static void		handle_commands(char *line, t_comm_corr commands[AM_COMMANDS],
 	}
 	if (i == AM_COMMANDS)
 		ft_exec(args, env);
-	free_args(args);
+	free_double_arr(args);
+	return (0);
 }
 
-int				main(void)
+int					main(void)
 {
 	char		*line;
 	int			i;
@@ -86,9 +59,9 @@ int				main(void)
 		i = -1;
 		while (args[++i])
 			handle_commands(args[i], commands, &env);
-		free_args(args);
+		free_double_arr(args);
 		free(line);
 	}
-	free_args(env);
+	free_double_arr(env);
 	return (0);
 }

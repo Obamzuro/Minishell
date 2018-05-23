@@ -1,32 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   msh_strjoin.c                                      :+:      :+:    :+:   */
+/*   ft_eol.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/05/15 09:35:23 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/19 13:53:14 by obamzuro         ###   ########.fr       */
+/*   Created: 2018/05/23 12:17:59 by obamzuro          #+#    #+#             */
+/*   Updated: 2018/05/23 13:10:44 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-char	*msh_strjoin_char(const char *s1, const char *s2, char c)
+char		*ft_eol(char *str)
 {
-	char	*a;
-	size_t	i;
-	size_t	s1l;
+	char	*ret;
 
-	if (!s1 || !s2)
-		return (NULL);
-	s1l = ft_strlen(s1);
-	i = s1l + ft_strlen(s2) + 2;
-	a = ft_strnew(i);
-	if (!a)
-		return (NULL);
-	ft_strcpy(a, s1);
-	a[s1l] = c;
-	ft_strcpy(a + s1l + 1, s2);
-	return (a);
+	if (!str || !*str)
+		return (str);
+	ret = str;
+	while (*ret)
+		++ret;
+	--ret;
+	return (ret);
 }

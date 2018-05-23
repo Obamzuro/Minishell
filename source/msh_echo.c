@@ -6,13 +6,13 @@
 /*   By: obamzuro <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 13:52:29 by obamzuro          #+#    #+#             */
-/*   Updated: 2018/05/19 13:52:30 by obamzuro         ###   ########.fr       */
+/*   Updated: 2018/05/22 18:55:07 by obamzuro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int			ft_echo(char **args, char ***env)
+void			ft_echo(char **args, char ***env)
 {
 	int		i;
 	int		first;
@@ -31,5 +31,5 @@ int			ft_echo(char **args, char ***env)
 		++i;
 	}
 	ft_printf("\n");
-	return (0);
+	return ;
 }
